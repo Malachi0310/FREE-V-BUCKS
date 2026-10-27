@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<title>Free V-Bucks Bot Miner</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#0b0620;color:#fff;font-family:"Trebuchet MS",system-ui,sans-serif}
+.scr{position:fixed;inset:0;display:none;overflow:hidden;transition:transform 1s}
+.scr.on{display:block}
+#s1{background:linear-gradient(160deg,#2b1065,#6d28d9,#0ea5e9,#2b1065);background-size:300% 300%;animation:bg 8s ease infinite;padding:env(safe-area-inset-top) 14px 0}
+@keyframes bg{50%{background-position:100% 100%}}
+.logo{font:900 clamp(28px,9vw,54px)/1 Impact,"Arial Black",sans-serif;text-align:center;margin:18px 0 4px;font-style:italic;text-shadow:3px 3px 0 #1e1b4b,0 0 24px #a78bfa;transform:skew(-4deg)}
+.sub{text-align:center;font-size:13px;opacity:.9;margin-bottom:12px}
+.panel{max-width:440px;margin:0 auto;background:rgba(10,5,40,.65);border:2px solid #c4b5fd;border-radius:18px;padding:14px;backdrop-filter:blur(4px)}
+#cnt{font:900 clamp(30px,10vw,48px) Impact,sans-serif;color:#facc15;text-align:center;text-shadow:0 0 14px #f59e0b}
+.bar{height:14px;background:#1e1b4b;border-radius:9px;overflow:hidden;margin:8px 0}
+#bf{height:100%;width:30%;background:linear-gradient(90deg,#22d3ee,#a3e635);transition:width .3s}
+#log{font:12px ui-monospace,Menlo,monospace;color:#86efac;height:72px;overflow:hidden;line-height:1.5}
+#taunt{text-align:center;margin-top:12px;font-size:18px;font-weight:700;min-height:26px}
+#go{position:absolute;z-index:5;padding:15px 24px;font:900 19px Impact,"Arial Black",sans-serif;letter-spacing:.5px;border:3px solid #fff;border-radius:999px;color:#1e1b4b;background:linear-gradient(#fde047,#f97316);box-shadow:0 6px 0 #9a3412,0 0 26px #fb923c;cursor:pointer;transition:left .16s,top .16s,transform .2s;white-space:nowrap}
+#skip{position:absolute;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));font-size:12px;opacity:.55;color:#fff}
+#toast{position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translate(-50%,-150%);z-index:99;background:#111827;border:2px solid #facc15;border-radius:14px;padding:10px 16px;max-width:90vw;text-align:center;font-weight:700;transition:transform .3s}
+#toast.on{transform:translate(-50%,0)}
+.fall{position:fixed;top:-50px;font-style:normal;z-index:50;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(360deg)}}
+.shake{animation:sh .1s 6}
+@keyframes sh{25%{transform:translate(8px,-6px)}75%{transform:translate(-8px,6px)}}
+#term{position:fixed;inset:0;z-index:80;background:#000;color:#4ade80;font:15px ui-monospace,Menlo,monospace;padding:20px;display:none;line-height:1.7;overflow:auto}
+#crack{position:fixed;inset:0;z-index:70;display:none;pointer-events:none;background:radial-gradient(circle at 55% 40%,#fff6 0,transparent 3%)}
+#crack svg{width:100%;height:100%}
+.btn{border:3px solid #fff;border-radius:14px;background:#7c3aed;color:#fff;font:900 16px Impact,sans-serif;padding:12px 18px;margin-top:14px}
+#cv{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+#hud{position:absolute;top:calc(8px + env(safe-area-inset-top));left:0;right:0;display:flex;justify-content:space-between;padding:0 12px;font:900 15px Impact,sans-serif;text-shadow:0 0 8px #22d3ee;pointer-events:none}
+#plate{background:#fde047;color:#111;border:2px solid #111;border-radius:6px;padding:1px 8px;text-shadow:none}
+#ctl{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom));left:0;right:0;display:flex;gap:8px;justify-content:center;padding:0 10px}
+#ctl button{flex:1;max-width:96px;height:56px;border-radius:16px;border:2px solid #22d3ee;background:#1b1030cc;color:#fff;font-size:22px;touch-action:none}
+#ctl button:active,#ctl .act{background:#ec4899;border-color:#fff}
+.ov{position:absolute;inset:0;z-index:20;background:#0b0620ee;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
+.ov h2{font:900 clamp(26px,8vw,44px) Impact,sans-serif;margin:0 0 8px;color:#f472b6;text-shadow:0 0 18px #ec4899}
+#pol{position:absolute;inset:0;z-index:15;pointer-events:none;display:none;animation:pol .4s infinite}
+@keyframes pol{0%{background:#ef444455}50%{background:#3b82f655}}
+.llama{position:absolute;z-index:3;font-style:normal;cursor:pointer;animation:drift ease-in-out infinite alternate}@keyframes drift{to{transform:translate(50px,-70px) rotate(25deg)}}.spark{position:absolute;z-index:2;font-style:normal;pointer-events:none;transform:translate(-50%,-50%);animation:sp .7s forwards}@keyframes sp{to{opacity:0;transform:translate(-50%,-150%) scale(.3)}}#ad{position:absolute;z-index:30;left:50%;top:32%;transform:translateX(-50%);width:78%;max-width:320px;background:#fff;color:#111;border:3px solid #ef4444;border-radius:14px;padding:20px 16px;text-align:center;font-size:18px}#adx{position:absolute;top:-12px;right:-12px;width:36px;height:36px;border-radius:50%;background:#ef4444;color:#fff;border:2px solid #fff;font-size:16px}#plate{pointer-events:auto}html,body{overscroll-behavior:none;-webkit-touch-callout:none}#s2,#s2 *{touch-action:none}.ov{overflow-y:auto;justify-content:safe center}.ov p{margin:6px 0}@media(max-height:560px){.ov h2{font-size:26px}#ctl button{height:48px}}.scr{height:100vh;height:100dvh}</style></head><body>
+<div id="toast"></div><div id="crack"><svg viewBox="0 0 100 100" preserveAspectRatio="none" stroke="#fff" stroke-width=".4" fill="none"><path d="M55 40L20 5M55 40L95 15M55 40L100 70M55 40L40 100M55 40L0 60M55 40L75 0M30 22L22 35M80 28L88 40M70 55L60 70"/></svg></div>
+<div id="term"></div>
+
+<div class="scr on" id="s1">
+ <div class="logo" id="logo">V-BUCKS BOT MINER</div>
+ <div class="sub">v9.9 • Hi Kiaysha 👋 • tap around, things happen 👀</div>
+ <div class="panel">
+  <div style="text-align:center;font-size:13px">V-Bucks mined for you</div>
+  <div id="cnt">🪙 0</div>
+  <div class="bar"><div id="bf"></div></div>
+  <div id="log"></div>
+ </div>
+ <div id="taunt">Tap the button to claim FREE V-Bucks!</div>
+ <button id="go">CLICK ME 👆</button>
+ <a id="skip">skip →</a>
+</div>
+
+<div class="scr" id="s2">
+ <canvas id="cv"></canvas><div id="pol"></div>
+ <div id="hud"><span id="sc">0m</span><span id="plate">KIAYSHA</span><span id="st">⭐0</span></div>
+ <div id="ctl"><button id="hb">📣</button><button id="nb">🔥</button><button id="rb">📻</button></div>
+ <div class="ov" id="ov"><h2>Hello Kiaysha 👋</h2><div style="font:900 22px Impact,sans-serif;color:#22d3ee;margin-bottom:10px">Welcome to NEON CRUISER 🏎️</div><p>Drag your finger to steer.<br>Grab ⭐🪙 · dodge 🚧🐄🍌<br>Hold 🔥 for nitro · 📣 horn · 📻 radio</p><button class="btn" id="startb">START ENGINE 🔑</button></div>
+ <div class="ov" id="fo" style="display:none;z-index:40"><h2 style="color:#ef4444">💀 GAME OVER</h2><p style="font-size:18px">Final score: lol</p></div>
+ <div id="ad" style="display:none"><b>🎁 YOU WON A FREE iPhone!</b><br><small>Tap to claim</small><button id="adx">✕</button></div>
+ <div class="ov" id="fin" style="display:none"><h2>🎉 PRANKED!</h2><p style="font-size:18px">Kiaysha, there are no free V-Bucks…<br>but you're a legendary driver 🏆<br>(and the button was never catchable 😂)</p><button class="btn" id="again">DRIVE AGAIN 🔁</button></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id),R=(a,b)=>a+Math.random()*(b-a),P=a=>a[Math.random()*a.length|0];
+let AC;function au(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state=='suspended')AC.resume()}
+function tone(f,d=.15,t='square',v=.07,s=0){au();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=t;o.frequency.setValueAtTime(f,n);if(s)o.frequency.exponentialRampToValueAtTime(Math.max(20,f+s),n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.001,n+d);o.connect(g).connect(AC.destination);o.start();o.stop(n+d)}
+function noise(d=.3,v=.15){au();const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*(1-i/a.length);const s=AC.createBufferSource(),g=AC.createGain();g.gain.value=v;s.buffer=b;s.connect(g).connect(AC.destination);s.start()}
+function siren(ms=2400){let i=0;const t=setInterval(()=>tone(i++%2?900:650,.2,'sawtooth',.06),220);setTimeout(()=>clearInterval(t),ms)}
+function show(n){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$('s'+n).classList.add('on');if(n==2){rs();greet()}}
+function toast(t,ms=2400){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),ms)}
+function rain(a,n=40){for(let i=0;i<n;i++){const e=document.createElement('i');e.className='fall';e.textContent=P(a);e.style.cssText=`left:${R(0,100)}vw;font-size:${R(20,42)}px;animation-duration:${R(1.5,3.5)}s;animation-delay:${R(0,.8)}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),5000)}}
+
+/* ===== PART 1: V-BUCKS BOT MINER ===== */
+const b=$('go'),T=['Catch me 😜','Too slow!','Nope 😂','Missed!','Almost… not.','You can do it Kiaysha!','Try harder 🐢','lol','Skill issue 💅','Are you even trying?','So close!','One more try…','I\'m getting tired 😮‍💨'],
+L=['CLICK ME 👆','NOPE','🏃💨','HEHE','CATCH ME','TOO SLOW','NOT HERE','BOO!'],
+LG=['Connecting to Epic servers… ✔','Bribing a Llama 🦙…','Downloading more RAM…','Asking Peely nicely 🍌…','Hiding in a bush 🌿…','Mining V-Bucks from the cloud ☁️','Convincing Kiaysha to tap…','Dancing for the algorithm 💃'];
+let dod=0,mined=0,caught=0,cool=0;
+function place(x,y){b.style.left=x+'px';b.style.top=y+'px'}
+function dodge(){dod++;const W=innerWidth,H=innerHeight,r=b.getBoundingClientRect(),w=r.width||150;let x,y,n=0;
+ do{x=R(10,Math.max(11,W-w-10));y=R(150,H-110);n++}while(n<25&&Math.hypot(x-r.left,y-r.top)<130);
+ place(x,y);const sc=Math.max(.6,1-dod*.03);b.style.transform=`scale(${sc}) rotate(${R(-12,12)}deg)`;b.textContent=P(L);
+ tone(R(400,1100),.1,'square',.06);$('taunt').textContent=T[Math.min(dod,T.length-1)]||P(T);
+ if([4,8,12].includes(dod))prank();
+ if(dod>=15){b.textContent='OKAY FINE 😭 TAP ME';b.style.transform='scale(1.25)';$('taunt').textContent='You win… 🏳️ tap it!';place(innerWidth/2-100,innerHeight/2)}}
+function chase(e){if(!$('s1').classList.contains('on')||dod>=15)return;const r=b.getBoundingClientRect();if(Math.hypot(e.clientX-(r.left+r.width/2),e.clientY-(r.top+r.height/2))<85)dodge()}
+['pointerenter','mousedown'].forEach(ev=>b.addEventListener(ev,e=>{if(dod<15){e.preventDefault();dodge()}}));
+b.addEventListener('touchstart',e=>{if(dod<15){e.preventDefault();dodge()}},{passive:false});
+document.addEventListener('pointermove',chase);document.addEventListener('pointerdown',chase);
+b.addEventListener('click',()=>{if(dod>=15&&!caught){caught=1;hack()}});
+$('s1').addEventListener('pointerdown',e=>{au();if(e.target===b||Date.now()<cool)return;cool=Date.now()+1800;prank()});
+$('skip').onclick=()=>show(2);
+
+const PR=[crack,flip,fake,()=>{rain(['🪙','💰','🍌','🦙']);tone(900,.3,'sine',.1,600)},shk,()=>{$('pol').style.display='block';siren();toast('🚓 Fortnite Police: pull over!');setTimeout(()=>$('pol').style.display='none',2400)}];
+function prank(){P(PR)()}
+function crack(){const c=$('crack');c.style.display='block';noise(.5,.25);toast('📱 Screen cracked… jk 😂');setTimeout(()=>c.style.display='none',2600)}
+function flip(){const s=$('s1');s.style.transform='rotate(180deg)';tone(300,.5,'sawtooth',.08,-200);toast('🙃 Whoa, upside down!');setTimeout(()=>s.style.transform='',2600)}
+function fake(){tone(700,.15,'sine',.1);setTimeout(()=>tone(900,.2,'sine',.1),160);toast(P(['🔋 Battery at 1%… just kidding','📩 Epic Games: your V-Bucks are in another castle 🏰','🦠 Virus detected! (it\'s just my bot)','📞 Incoming call: Peely 🍌','🎁 You won a free… nothing!']))}
+function shk(){const s=$('s1');s.classList.add('shake');noise(.5,.2);toast('🫨 EARTHQUAKE!');setTimeout(()=>s.classList.remove('shake'),700)}
+
+setInterval(()=>{if(!$('s1').classList.contains('on'))return;mined+=Math.floor(R(50,900));$('cnt').textContent='🪙 '+mined.toLocaleString();$('bf').style.width=R(20,98)+'%'},300);
+setInterval(()=>{const l=$('log');l.innerHTML+='> '+P(LG)+'<br>';while(l.children.length>4)l.removeChild(l.firstChild)},900);
+setTimeout(()=>{const W=innerWidth,H=innerHeight;place(W/2-70,H*.62)},50);
+
+function hack(){const t=$('term');t.style.display='block';t.innerHTML='';
+ const ln=['> Hacking Kiaysha\'s Fortnite account… 💻','> Found 0 V-Bucks','> Uploading 9,999 selfies… (jk)','> Scanning the whole internet…','> ERROR 404: free V-Bucks not found','> Plot twist: found a sports car 🏎️'];let i=0;
+ const iv=setInterval(()=>{if(i<ln.length){t.innerHTML+=ln[i++]+'<br>';tone(R(300,900),.08,'square',.05)}else{clearInterval(iv);rain(['🏎️','😂','🎉','🚗'],50);t.innerHTML+='<button class="btn" id="ent">HIT THE ROAD 🏎️</button>';$('ent').onclick=()=>{t.style.display='none';show(2)}}},650)}
+
+/* ===== PART 2: NEON DRIVE ===== */
+let eo,ef,eg;
+function engineOn(){au();if(eo)return;eo=AC.createOscillator();eo.type='sawtooth';ef=AC.createBiquadFilter();ef.type='lowpass';eg=AC.createGain();eg.gain.value=.06;eo.connect(ef).connect(eg).connect(AC.destination);eo.start();setRev(0)}
+function setRev(r){if(eo){const n=AC.currentTime;eo.frequency.setTargetAtTime(45+r*170,n,.08);ef.frequency.setTargetAtTime(300+r*1600,n,.1)}}
+const cv=$('cv'),cx=cv.getContext('2d');let W=400,H=720,S=1,PW=0,PH=0;
+function rs(){const d=Math.min(2,devicePixelRatio||1);PW=cv.clientWidth;PH=cv.clientHeight;if(PW<20||PH<20)return;S=Math.max(.35,Math.min(PW/400,PH/720));W=PW/S;H=PH/S;cv.width=Math.round(PW*d);cv.height=Math.round(PH*d);cx.setTransform(d*S,0,0,d*S,0,0);if(!run)px=tx=W/2}
+addEventListener('resize',rs);if(window.ResizeObserver)new ResizeObserver(rs).observe(cv);if(window.visualViewport)visualViewport.addEventListener('resize',rs);addEventListener('orientationchange',()=>setTimeout(rs,300));document.addEventListener('contextmenu',e=>e.preventDefault());const CY=()=>H-110/S-52;
+let run=0,raf=0,px=0,tx=0,sp=0,dist=0,stars=0,ob=[],nit=0,spin=0,flat=0,next=500,off=0,shk2=0;
+const OB=[['🚧',1],['🐄',1],['🍌',2],['🐷',1],['⭐',3],['🪙',3],['⭐',3]];
+const road=()=>{const w=Math.min(W*.92,440);return[(W-w)/2,w]};
+let dx0=0,px0=0,drag=0;
+cv.addEventListener('pointerdown',e=>{au();const q=cv.getBoundingClientRect(),wx=(e.clientX-q.left)/S,wy=(e.clientY-q.top)/S;drag=1;dx0=e.clientX;px0=px;try{cv.setPointerCapture(e.pointerId)}catch(_){}if(run&&Math.hypot(wx-px,wy-CY())<55){horn();spin=25;toast(P(['🚗 Beep beep!','Don\'t poke me 😤','Vroom? 🫠','Kiaysha, eyes on the road!']))}});
+cv.addEventListener('pointermove',e=>{if(drag){const d=(e.clientX-dx0)/S*1.3;tx=px0+(inv?-d:d)}});
+['pointerup','pointercancel'].forEach(ev=>cv.addEventListener(ev,()=>drag=0));
+addEventListener('keydown',e=>{if(e.key=='ArrowLeft')tx-=45;if(e.key=='ArrowRight')tx+=45;if(e.key==' ')nit=1});addEventListener('keyup',e=>{if(e.key==' ')nit=0});
+function start(){au();engineOn();$('ov').style.display='none';$('fin').style.display='none';run=1;dist=0;stars=0;ob=[];sp=5;next=500;px=tx=W/2;noise(.4,.1);tone(120,.5,'sawtooth',.1,200);if(!raf)loop()}
+$('startb').onclick=start;$('again').onclick=start;
+function horn(){tone(420,.45,'sawtooth',.09);tone(530,.45,'sawtooth',.07)}
+$('hb').onclick=horn;
+const nb=$('nb');['pointerdown'].forEach(e=>nb.addEventListener(e,ev=>{ev.preventDefault();nit=1;noise(.6,.12)}));['pointerup','pointerleave','pointercancel'].forEach(e=>nb.addEventListener(e,()=>nit=0));
+let rad=0;$('rb').onclick=()=>{au();if(rad){clearInterval(rad);rad=0;$('rb').classList.remove('act');return toast('📻 Radio off')}let i=0;const sc=[262,330,392,523,392,330,294,349];$('rb').classList.add('act');rad=setInterval(()=>{tone(sc[i%8],.18,'triangle',.07);if(i%2==0)tone(sc[i%8]/4,.22,'sine',.12);i++},230);toast('📻 Kiaysha FM 🎶')};
+
+function event(){const k=P(['flat','cop','cows','honk','rain','invert','fakeover','ad','lag','chase','donut']);
+ if(k=='flat'){flat=110;noise(.9,.2);toast('🛞 FLAT TIRE! …kidding (mostly)')}
+ if(k=='cop'){$('pol').style.display='block';siren();toast('🚓 Pull over! …it\'s a V-Bucks delivery 😂');setTimeout(()=>$('pol').style.display='none',2600)}
+ if(k=='cows'){toast('🐄 COW STAMPEDE!');const[rx,rw]=road();for(let i=0;i<5;i++)ob.push({x:rx+30+i*(rw-60)/4,y:-40-R(0,160),e:'🐄',k:1})}
+ if(k=='honk'){horn();setTimeout(horn,500);toast('🚗💨 Someone honked at you!')}
+ if(k=='rain'){rain(['🪙','⭐','💎']);toast('🪙 It\'s raining coins!')}
+ troll(k)}
+
+function finale(){run=0;setRev(0);rain(['🎉','🏆','😂','🪙','🎊'],60);[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.3,'triangle',.12),i*160));$('fin').style.display='flex'}
+
+let lt=0;function loop(){raf=requestAnimationFrame(loop);const nw=performance.now(),f=Math.min(3,(nw-(lt||nw))/16.67||1);lt=nw;if(!$('s2').classList.contains('on'))return;
+ const[rx,rw]=road();
+ if(run&&Date.now()>lagU){const mx=nit?15:9;sp+=(mx-sp)*(1-Math.pow(.97,f));if(flat>0){sp*=Math.pow(.97,f);flat-=f}dist+=sp/10*f;off=(off+sp*f)%60;
+  px+=(tx-px)*(1-Math.pow(.8,f));px=Math.max(rx+28,Math.min(rx+rw-28,px));setRev(sp/15);
+  if(spin>0)spin-=f;if(shk2>0)shk2-=f;
+  if(Math.random()<(.018+sp/700)*f)ob.push((t=>({x:R(rx+28,rx+rw-28),y:-40,e:t[0],k:t[1]}))(P(OB)));
+  if(dist>next){next+=R(300,520);event()}
+  if(dist>2400)finale();
+  const cy=CY();
+  ob=ob.filter(o=>{o.y+=sp*f;if(o.ch)o.x+=(px-o.x)*.03*f;if(Math.abs(o.x-px)<34&&Math.abs(o.y-cy)<48){
+    if(o.k==3){stars++;if(stars%10==0)toast('⭐ '+stars+' stars! Still no V-Bucks 😂');tone(988,.1,'square',.07);tone(1319,.15,'square',.07);return 0}
+    if(o.k==2){spin=60;noise(.4,.1);tone(500,.5,'sine',.08,-300);toast('🍌 Banana slip!');return 0}
+    sp=3;shk2=14;noise(.4,.25);tone(150,.3,'square',.1,-100);toast(P(['💥 BONK!','🐄 MOOOO!','🚧 Oops!','🐷 Oink!']));return 0}
+   return o.y<H+60});
+  $('sc').textContent=(dist|0)+'m ⚡'+(sp*12|0);$('st').textContent='⭐'+stars}
+ draw(rx,rw)}
+
+function draw(rx,rw){cx.save();if(shk2)cx.translate(R(-6,6),R(-6,6));
+ const g=cx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#1a0b3d');g.addColorStop(1,'#0b0620');cx.fillStyle=g;cx.fillRect(-10,-10,W+20,H+20);
+ cx.strokeStyle='#7c3aed55';cx.lineWidth=1;for(let y=-60+off;y<H;y+=60){cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke()}
+ cx.fillStyle='#17122b';cx.fillRect(rx,0,rw,H);
+ cx.shadowColor='#22d3ee';cx.shadowBlur=14;cx.fillStyle='#22d3ee';cx.fillRect(rx-3,0,4,H);cx.fillRect(rx+rw-1,0,4,H);cx.shadowBlur=0;
+ cx.fillStyle='#ffffff88';for(let l=1;l<3;l++)for(let y=-60+off;y<H;y+=60)cx.fillRect(rx+rw*l/3-2,y,4,28);
+ cx.font='34px serif';cx.textAlign='center';cx.textBaseline='middle';
+ ob.forEach(o=>cx.fillText(o.e,o.x,o.y));
+ car(px||W/2,CY());cx.restore()}
+
+function car(x,y){cx.save();cx.translate(x,y);cx.rotate(spin*.35);
+ if(nit&&run){cx.fillStyle='#fb923c';cx.beginPath();cx.moveTo(-12,40);cx.lineTo(0,40+R(30,60));cx.lineTo(12,40);cx.fill();cx.fillStyle='#fde047';cx.beginPath();cx.moveTo(-6,40);cx.lineTo(0,40+R(14,30));cx.lineTo(6,40);cx.fill()}
+ cx.fillStyle='#fde04740';cx.beginPath();cx.moveTo(-16,-40);cx.lineTo(-34,-130);cx.lineTo(0,-130);cx.fill();cx.beginPath();cx.moveTo(16,-40);cx.lineTo(34,-130);cx.lineTo(0,-130);cx.fill();
+ cx.shadowColor='#ec4899';cx.shadowBlur=26;cx.fillStyle='#ec4899';cx.beginPath();cx.roundRect(-22,-42,44,84,12);cx.fill();cx.shadowBlur=0;
+ cx.fillStyle='#fff9';cx.fillRect(-3,-42,6,84);
+ cx.fillStyle='#1b1030';cx.beginPath();cx.roundRect(-16,-14,32,28,7);cx.fill();
+ cx.fillStyle='#fde047';cx.fillRect(-18,-42,8,5);cx.fillRect(10,-42,8,5);
+ cx.fillStyle='#ef4444';cx.fillRect(-18,38,8,4);cx.fillRect(10,38,8,4);
+ cx.restore()}
+
+/* ===== EXTRAS ===== */
+let inv=0,lagU=0,pops=0,spT=0;
+function greet(){toast('👋 Hello Kiaysha!',3000);try{const u=new SpeechSynthesisUtterance('Hello Kiaysha');u.rate=.95;u.pitch=1.2;speechSynthesis.speak(u)}catch(e){}}
+function troll(k){
+ if(k=='invert'){inv=1;toast('🙃 STEERING IS DRUNK! Left is right!',3000);setTimeout(()=>{inv=0;toast('😮‍💨 Steering fixed… maybe')},5000)}
+ if(k=='fakeover'){lagU=Date.now()+2300;$('fo').style.display='flex';[400,330,260,180].forEach((f,i)=>setTimeout(()=>tone(f,.35,'sawtooth',.1),i*350));setTimeout(()=>{$('fo').style.display='none';toast('JUST KIDDING 😂 keep driving!')},2300)}
+ if(k=='lag'){lagU=Date.now()+1300;toast('📶 LAG SPIKE… 99%… 99%…')}
+ if(k=='chase'){toast('🐷 The pigs are CHASING you!');const[rx,rw]=road();for(let i=0;i<3;i++)ob.push({x:R(rx+30,rx+rw-30),y:-40-i*140,e:'🐷',k:1,ch:1})}
+ if(k=='donut'){spin=90;horn();toast('🌀 DONUT TIME!')}
+ if(k=='ad'){const a=$('ad');a.style.display='block';$('adx').style.top='-12px';$('adx').style.right='-12px';tone(880,.15,'sine',.1);setTimeout(()=>{if(a.style.display=='block'){a.style.display='none';toast('🛡️ Ad blocker activated 😎')}},6000)}}
+const adx=$('adx');
+['touchstart','pointerdown'].forEach(ev=>adx.addEventListener(ev,e=>{e.preventDefault();e.stopPropagation();adx.style.top=R(-12,110)+'px';adx.style.right=R(-14,200)+'px';tone(R(300,900),.1,'square',.06);toast('😈 The X runs too!')},{passive:false}));
+adx.addEventListener('click',e=>e.stopPropagation());
+$('ad').onclick=()=>{$('ad').style.display='none';toast('🤡 You clicked an ad. Congrats.');noise(.3,.1)};
+$('plate').onclick=()=>toast('🪪 Plate registered to Peely 🍌');
+function llama(){const e=document.createElement('i');e.className='llama';e.textContent=P(['🦙','🍌','🎁','🪂','🐸']);e.style.cssText=`left:${R(5,80)}vw;top:${R(22,80)}vh;font-size:${R(34,56)}px;animation-duration:${R(3,6)}s`;
+ e.addEventListener('pointerdown',ev=>{ev.stopPropagation();ev.preventDefault();pops++;tone(R(500,1200),.12,'square',.08,400);rain([e.textContent,'✨'],8);toast(pops%5==0?'🎯 '+pops+' popped! Still no V-Bucks 😂':P(['POP! 🎉','Ow! 😵','You got me 😭','Nice tap! +0 V-Bucks']));e.remove();setTimeout(llama,1000)});$('s1').appendChild(e)}
+for(let i=0;i<4;i++)llama();
+$('s1').addEventListener('pointermove',e=>{if(Date.now()<spT)return;spT=Date.now()+50;const x=document.createElement('i');x.className='spark';x.textContent=P(['✨','🪙','💜']);x.style.left=e.clientX+'px';x.style.top=e.clientY+'px';$('s1').appendChild(x);setTimeout(()=>x.remove(),700)});
+$('logo').addEventListener('pointerdown',e=>{e.stopPropagation();const l=$('logo');l.style.transition='transform .6s';l.style.transform='rotate(360deg) scale(1.2)';tone(300,.4,'sawtooth',.08,800);toast('🌀 Weeee!');setTimeout(()=>{l.style.transition='none';l.style.transform='skew(-4deg)'},650)});
+$('cnt').addEventListener('pointerdown',e=>{e.stopPropagation();mined+=250000;rain(['🪙'],14);tone(1200,.2,'sine',.1);toast(P(['Mining boosted! (not really)','+250,000 fake V-Bucks 🤑','Bot is overheating 🔥']))});
+</script></body></html>
